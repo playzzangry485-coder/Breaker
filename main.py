@@ -35,16 +35,22 @@ async def music(ctx, *, url):
 
     ydl_opts = {"format": "bestaudio", "quiet": True}
 
-    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        info = ydl.extract_info(url, download=False)
-        stream_url = info["url"]
+    with yt_dlp.YoutubeDL({"format": "bestaudio", "quiet": True}) as ydl:
+    info = ydl.extract_info(url, download=False)
+    stream_url = info["url"]
 
-    source = discord.FFmpegPCMAudio(
+source = discord.FFmpegPCMAudio(
     stream_url,
     executable="ffmpeg",
     before_options="-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5",
     options="-vn"
 )
+
+if vc.is_playing():
+    vc.stop()
+
+vc.play(source)
+await ctx.send(f"Now Playing: {info['title']}")
 
 
     await ctx.send(f"Now Playing: {info['title']}")
