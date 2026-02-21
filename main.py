@@ -3,6 +3,7 @@ from discord.ext import commands
 from discord import app_commands
 import yt_dlp
 import os
+import subprocess
 # Ensure ffmpeg is installed via mise
 subprocess.run("mise install ffmpeg", shell=True)
 
