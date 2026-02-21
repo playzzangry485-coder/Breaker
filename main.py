@@ -43,10 +43,10 @@ async def music(ctx, *, url):
         stream_url = info["url"]
 
     source = discord.FFmpegPCMAudio(
-        stream_url,
-        executable="ffmpeg",
-        before_options="-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5",
-        options="-vn"
+    stream_url,
+    executable="./bin/ffmpeg",  # path to your ffmpeg binary
+    before_options="-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5",
+    options="-vn"
     )
 
     if vc.is_playing():
