@@ -13,15 +13,12 @@ intents.voice_states = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 tree = bot.tree
 
-from discord import app_commands
-
-bot = commands.Bot(command_prefix="!", intents=intents)
-tree = bot.tree
 
 @bot.event
 async def on_ready():
     await tree.sync()
     print(f"Logged in as {bot.user}")
+
 
 @bot.command()
 async def music(ctx, *, url):
@@ -36,24 +33,28 @@ async def music(ctx, *, url):
     else:
         vc = ctx.voice_client
 
+    await ctx.send("Loading music... 🎵")
+
     ydl_opts = {"format": "bestaudio", "quiet": True}
 
-    with yt_dlp.YoutubeDL({"format": "bestaudio", "quiet": True}) as ydl:
-    info = ydl.extract_info(url, download=False)
-    stream_url = info["url"]
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        info = ydl.extract_info(url, download=False)
+        stream_url = info["url"]
 
-source = discord.FFmpegPCMAudio(
-    stream_url,
-    executable="ffmpeg",
-    before_options="-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5",
-    options="-vn"
-)
+    source = discord.FFmpegPCMAudio(
+        stream_url,
+        executable="ffmpeg",
+        before_options="-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5",
+        options="-vn"
+    )
 
-if vc.is_playing():
-    vc.stop()
+    if vc.is_playing():
+        vc.stop()
 
-vc.play(source)
+    vc.play(source)
+
     await ctx.send(f"Now Playing: {info['title']}")
+
 
 @bot.command()
 async def leave(ctx):
@@ -75,9 +76,9 @@ async def slash_play(interaction: discord.Interaction, url: str):
     else:
         vc = await channel.connect()
 
-    ydl_opts = {"format": "bestaudio", "quiet": True}
-
     await interaction.response.send_message("Loading music... 🎵")
+
+    ydl_opts = {"format": "bestaudio", "quiet": True}
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(url, download=False)
@@ -85,11 +86,14 @@ async def slash_play(interaction: discord.Interaction, url: str):
 
     source = discord.FFmpegPCMAudio(
         stream_url,
+        executable="ffmpeg",
         before_options="-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5",
         options="-vn"
     )
 
-    vc.stop()
+    if vc.is_playing():
+        vc.stop()
+
     vc.play(source)
 
 
@@ -101,9 +105,5 @@ async def slash_leave(interaction: discord.Interaction):
     else:
         await interaction.response.send_message("Not in a voice channel.")
 
-@bot.command()
-async def test(ctx):
-    if ctx.voice_client:
-        await ctx.send("Is playing: " + str(ctx.voice_client.is_playing()))
-        
+
 bot.run(os.getenv("TOKEN"))
