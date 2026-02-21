@@ -44,11 +44,8 @@ async def music(ctx, *, url):
     executable="ffmpeg",
     before_options="-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5",
     options="-vn"
-    )
-    )
+)
 
-    vc.stop()
-    vc.play(source)
 
     await ctx.send(f"Now Playing: {info['title']}")
 
