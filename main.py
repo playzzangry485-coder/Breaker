@@ -104,5 +104,9 @@ async def slash_leave(interaction: discord.Interaction):
     else:
         await interaction.response.send_message("Not in a voice channel.")
 
-
+@bot.command()
+async def test(ctx):
+    if ctx.voice_client:
+        await ctx.send("Is playing: " + str(ctx.voice_client.is_playing()))
+        
 bot.run(os.getenv("TOKEN"))
