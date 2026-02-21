@@ -53,9 +53,6 @@ if vc.is_playing():
     vc.stop()
 
 vc.play(source)
-await ctx.send(f"Now Playing: {info['title']}")
-
-
     await ctx.send(f"Now Playing: {info['title']}")
 
 @bot.command()
