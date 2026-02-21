@@ -2,11 +2,15 @@ import discord
 from discord.ext import commands
 import yt_dlp
 import os
-from discord import app_commands
 
 intents = discord.Intents.default()
 intents.message_content = True
 intents.voice_states = True
+
+bot = commands.Bot(command_prefix="!", intents=intents)
+tree = bot.tree
+
+from discord import app_commands
 
 bot = commands.Bot(command_prefix="!", intents=intents)
 tree = bot.tree
@@ -51,8 +55,6 @@ async def leave(ctx):
     if ctx.voice_client:
         await ctx.voice_client.disconnect()
 
-
-# 🔽 PASTE SLASH COMMAND CODE HERE 🔽
 
 @tree.command(name="play", description="Play music from YouTube")
 @app_commands.describe(url="YouTube URL")
