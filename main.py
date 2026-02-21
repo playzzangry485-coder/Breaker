@@ -3,6 +3,8 @@ from discord.ext import commands
 from discord import app_commands
 import yt_dlp
 import os
+# Ensure ffmpeg is installed via mise
+subprocess.run("mise install ffmpeg", shell=True)
 
 intents = discord.Intents.default()
 intents.message_content = True
