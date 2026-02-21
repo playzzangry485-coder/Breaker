@@ -44,7 +44,7 @@ async def music(ctx, *, url):
 
     source = discord.FFmpegPCMAudio(
     stream_url,
-    executable="./bin/ffmpeg",  # path to your ffmpeg binary
+    executable="./bin/ffmpeg",  # <-- use this path
     before_options="-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5",
     options="-vn"
     )
